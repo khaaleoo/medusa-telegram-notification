@@ -1,155 +1,97 @@
-<p align="center">
-  <a href="https://www.medusa-commerce.com">
-    <img alt="Medusa" src="https://i.imgur.com/USubGVY.png" width="100" />
-  </a>
-</p>
-<h1 align="center">
-  Medusa Starter Default
-</h1>
-<p align="center">
-This repo provides the skeleton to get you started with using <a href="https://github.com/medusajs/medusa">Medusa</a>. Follow the steps below to get ready.
-</p>
-<p align="center">
-  <a href="https://github.com/medusajs/medusa/blob/master/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Medusa is released under the MIT license." />
-  </a>
-  <a href="https://github.com/medusajs/medusa/blob/master/CONTRIBUTING.md">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" alt="PRs welcome!" />
-  </a>
-  <a href="https://discord.gg/xpCwq3Kfn8">
-    <img src="https://img.shields.io/badge/chat-on%20discord-7289DA.svg" alt="Discord Chat" />
-  </a>
-  <a href="https://twitter.com/intent/follow?screen_name=medusajs">
-    <img src="https://img.shields.io/twitter/follow/medusajs.svg?label=Follow%20@medusajs" alt="Follow @medusajs" />
-  </a>
-  <p align="center">
-    <a href="https://heroku.com/deploy?template=https://github.com/medusajs/medusa-starter-default/tree/feat/deploy-heroku">
-      <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
-    </a>
-  </p>
-</p>
+# Medusa Telegram Notification Plugin
 
-## Prerequisites
+The **medusa-telegram-notification** plugin allows Medusa Server to send push notifications to Telegram. It provides a simple way to integrate Telegram notifications into your Medusa Server application.
 
-This starter has minimal prerequisites and most of these will usually already be installed on your computer.
+## Installation
 
-- [Install Node.js](https://nodejs.org/en/download/)
-- [Install git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- [Install SQLite](https://www.sqlite.org/download.html)
+You can install the **medusa-telegram-notification** plugin using npm, yarn, or pnpm.
 
-## Setting up your store
-
-- Install the Medusa CLI
-  ```
-  npm install -g @medusajs/medusa
-  yarn global add @medusajs/medusa
-  ```
-- Create a new Medusa project
-  ```
-  medusa new my-medusa-store
-  ```
-- Run your project
-  ```
-  cd my-medusa-store
-  medusa develop
-  ```
-
-Your local Medusa server is now running on port **9000**.
-
-### Seeding your Medusa store
-
----
-
-To seed your medusa store run the following command:
-
+**npm:**
 ```
-medusa seed -f ./data/seed.json
+npm install medusa-telegram-notification
 ```
 
-This command seeds your database with some sample data to get you started, including a store, an administrator account, a region and a product with variants. What the data looks like precisely you can see in the `./data/seed.json` file.
-
-## Setting up your store with Docker
-
-- Install the Medusa CLI
-  ```
-  npm install -g @medusajs/medusa-cli
-  ```
-- Create a new Medusa project
-  ```
-  medusa new my-medusa-store
-  ```
-- Update project config in `medusa-config.js`:
-
-  ```
-  module.exports = {
-    projectConfig: {
-      redis_url: REDIS_URL,
-      database_url: DATABASE_URL, //postgres connectionstring
-      database_type: "postgres",
-      store_cors: STORE_CORS,
-      admin_cors: ADMIN_CORS,
-    },
-    plugins,
-  };
-  ```
-
-- Run your project
-
-  When running your project the first time `docker compose` should be run with the `build` flag to build your container locally:
-
-  ```
-  docker-compose up --build
-  ```
-
-  When running your project subsequent times you can run docker compose with no flags to spin up your local environment in seconds:
-
-  ```
-  docker-compose up
-  ```
-
-Your local Medusa server is now running on port **9000**.
-
-### Seeding your Medusa store with Docker
-
----
-
-To add seed data to your medusa store running with Docker, run this command in a seperate terminal:
-
+**yarn:**
 ```
-docker exec medusa-server medusa seed -f ./data/seed.json
+yarn add medusa-telegram-notification
 ```
 
-This will execute the previously described seed script in the running `medusa-server` Docker container.
-
-## Try it out
-
+**pnpm:**
 ```
-curl -X GET localhost:9000/store/products | python -m json.tool
+pnpm install medusa-telegram-notification
 ```
 
-After the seed script has run you will have the following things in you database:
+## Configuration
 
-- a User with the email: admin@medusa-test.com and password: supersecret
-- a Region called Default Region with the countries GB, DE, DK, SE, FR, ES, IT
-- a Shipping Option called Standard Shipping which costs 10 EUR
-- a Product called Cool Test Product with 4 Product Variants that all cost 19.50 EUR
+To use the plugin, you need to add it to your `medusa-config.js` file.
 
-Visit [docs.medusa-commerce.com](https://docs.medusa-commerce.com) for further guides.
+```javascript
+// medusa-config.js
+{
+  resolve: `medusa-telegram-notification`,
+  options: {
+    botToken: process.env.NOTIFICATION_TELEGRAM_BOT_TOKEN,
+    debug: true || process.env.NODE_ENV === "development",
+  },
+}
+```
 
-<p>
-  <a href="https://www.medusa-commerce.com">
-    Website
-  </a> 
-  |
-  <a href="https://medusajs.notion.site/medusajs/Medusa-Home-3485f8605d834a07949b17d1a9f7eafd">
-    Notion Home
-  </a>
-  |
-  <a href="https://twitter.com/intent/follow?screen_name=medusajs">
-    Twitter
-  </a>
-  |
-  <a href="https://docs.medusa-commerce.com">
-    Docs
-  </a>
-</p>
+Make sure to replace `process.env.NOTIFICATION_TELEGRAM_BOT_TOKEN` with the actual bot token for your Telegram bot. You can obtain a bot token by creating a new bot on the Telegram BotFather platform.
+
+## Usage
+
+Once you have configured the plugin, you can use the provided sample code as a starting point for sending notifications. Here's an example of how to use the `MyNotificationService` class to handle an order placement event:
+
+```typescript
+// my-notification.ts
+import { BaseService } from "medusa-interfaces";
+import { TELEGRAM_GROUP } from "../utils/constants";
+import { toVNCurrencyFormat } from "../utils/currency";
+
+const ADMIN_BASE_URL = process.env.ADMIN_BASE_URL;
+
+class MyNotificationService extends BaseService {
+  telegramNotificationService_;
+
+  constructor({ telegramNotificationService }) {
+    super();
+
+    this.telegramNotificationService_ = telegramNotificationService;
+  }
+
+  handleOrderPlaced(order) {
+    const customerInfo = `${[order.customer.email, order.customer.phone].filter((e) => e).join(" - ")}`;
+    const message = [
+      `💌 Order *#${order.display_id}* placed successfully`,
+      `📝 Order details: [view](${ADMIN_BASE_URL}/a/orders/${order.order_id})`,
+      `🍭 Customer: ${customerInfo} ([details](${ADMIN_BASE_URL}/a/customers/${order.customer.id}))`,
+      `💰 Total amount: ${toVNCurrencyFormat(order.reporting_total)}`,
+      `🚚 Shipping address: ${order.shipping_district}, ${order.shipping_city}`,
+    ].join("\n");
+
+    const payload = {
+      chat_ids: [TELEGRAM_GROUP.test],
+      text: message,
+      parse_mode: "Markdown",
+    };
+
+    this.telegramNotificationService_.sendMessage(payload);
+  }
+}
+
+export default MyNotificationService;
+```
+
+The `MyNotificationService` class extends the `BaseService` provided by Medusa Server. It uses the `telegramNotificationService` to send a Telegram message with information about the placed order. You can customize the content of the message according to your requirements.
+
+Additionally, you can use the `toVNCurrencyFormat` function from the `currency.ts` file to format the order total in Vietnamese currency (VND).
+
+Feel free to modify and extend the `MyNotificationService` class to handle other events or add more functionality as needed.
+
+## Support
+
+If you encounter any issues or have questions regarding the **medusa-telegram-notification** plugin, please open an issue on the [GitHub repository](https://github.com/your-plugin-repository). We'll be happy to assist you.
+
+## License
+
+This plugin is licensed under the [MIT License](https://opensource.org/licenses/MIT).
