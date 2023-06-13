@@ -45,10 +45,10 @@ Once you have configured the plugin, you can use the provided sample code as a s
 ```typescript
 // my-notification.ts
 import { BaseService } from "medusa-interfaces";
-import { TELEGRAM_GROUP } from "../utils/constants";
 import { toVNCurrencyFormat } from "../utils/currency";
 
 const ADMIN_BASE_URL = process.env.ADMIN_BASE_URL;
+const TELEGRAM_GROUP_ID = process.env.TELEGRAM_GROUP_ID;
 
 class MyNotificationService extends BaseService {
   telegramNotificationService_;
@@ -70,7 +70,7 @@ class MyNotificationService extends BaseService {
     ].join("\n");
 
     const payload = {
-      chat_ids: [TELEGRAM_GROUP.test],
+      chat_ids: [TELEGRAM_GROUP_ID],
       text: message,
       parse_mode: "Markdown",
     };
@@ -80,6 +80,7 @@ class MyNotificationService extends BaseService {
 }
 
 export default MyNotificationService;
+
 ```
 
 The `MyNotificationService` class extends the `BaseService` provided by Medusa Server. It uses the `telegramNotificationService` to send a Telegram message with information about the placed order. You can customize the content of the message according to your requirements.

@@ -1,6 +1,6 @@
 {
   "name": "medusa-telegram-notification",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A service that sends notifications to Telegram, one or more groups at a time.",
   "author": "Le Xuan Kha (Leo) - khalx.leo@gmail.com",
   "license": "MIT",
